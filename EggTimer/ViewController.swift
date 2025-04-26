@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
@@ -15,6 +16,7 @@ class ViewController: UIViewController {
     var timer = Timer()
     var totalTime = 0
     var secondPassed = 0
+    var player: AVAudioPlayer?
     
     
     @IBOutlet weak var profressBar: UIProgressView!
@@ -22,7 +24,7 @@ class ViewController: UIViewController {
         
         timer.invalidate()
         let hardness = sender.currentTitle!
-      
+        
         totalTime = eggTime[hardness]!
         
         profressBar.progress = 0.0
@@ -37,12 +39,20 @@ class ViewController: UIViewController {
             
             secondPassed += 1
             profressBar.progress = Float(secondPassed) / Float(totalTime)
-          
+            
             
             
         } else{
             timer.invalidate()
             TitleLabel.text = "egg is done"
+            if let soundURL = Bundle.main.url(forResource: "alarm_sound", withExtension: "mp3") {
+                do {
+                    player = try AVAudioPlayer(contentsOf: soundURL)
+                    player?.play()
+                } catch {
+                    print("hui \(error)")
+                }
+            }
         }
     }
 }
